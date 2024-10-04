@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Diabetes Prediction Form</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center elements horizontally */
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            /*background-color: #f9f9f9; */ /* Optional: Change body background color */
+		background-image: url('bg.jpg'); /* Replace with your image URL */
+   	        background-size: cover; /* Cover the entire viewport */
+                background-position: center; /* Center the background image */
+        }
+        h1 {
+            margin-top: 20px; /* Add space above the heading */
+        }
+        form {
+            text-align: left;
+            width: 200px; /* Set the width of the form */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff; /* Background color for the form */
+            margin-top: 10px; /* Space between heading and form */
+        }
+       
+	label {
+            margin: 5px 0;
+            display: block;
+            text-align: left; /* Left align the label */
+        }
+        
+ 	input {
+        padding: 10px; /* Increase padding for more height */
+        width: 100%; /* Fill the width of the form */
+        height: 20px; /* Set a specific height */
+        box-sizing: border-box; /* Include padding in width */
+        border: 1px solid #ccc; /* Optional: Add border styling */
+        border-radius: 5px; /* Match form border radius */
+    	}
+
+
+      .button-container {
+            display: flex; /* Use flexbox for buttons */
+            justify-content: center; /* Center align buttons */
+            margin-top: 10px; /* Space above buttons */
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* Space above buttons */
+	    margin: 0 10px; /* Add space between buttons */
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        
+	 #result {
+            margin-top: 10px;
+            padding: 10px;
+            width: 300px; /* Set the width of the result box */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; /* Background color for the result */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+	.title {
+ 	   padding: 10px;                /* Add padding for space inside the box */
+  	   width: fit-content;           /* Adjust width to fit content */
+  	  border: 1px solid #ccc;       /* Same border as input boxes */
+  	  border-radius: 5px;           /* Match border radius of input boxes */
+  	  background-color: #fff;       /* Background color for the title box */
+   	  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+   	  margin-bottom: 20px;          /* Space below the title box */
+	}
+
+    </style>
+</head>
+<body>
+    <h2 class="title">Diabetes Prediction Model</h1>
+
+    <form id="valuesForm">
+        <label for="value1">Value 1:</label>
+        <input type="number" id="value1" step="any" required>
+        
+        <label for="value2">Value 2:</label>
+        <input type="number" id="value2" step="any" required>
+        
+        <label for="value3">Value 3:</label>
+        <input type="number" id="value3" step="any" required>
+        
+        <label for="value4">Value 4:</label>
+        <input type="number" id="value4" step="any" required>
+        
+        <label for="value5">Value 5:</label>
+        <input type="number" id="value5" step="any" required>
+        
+        <label for="value6">Value 6:</label>
+        <input type="number" id="value6" step="any" required>
+        
+        <label for="value7">Value 7:</label>
+        <input type="number" id="value7" step="any" required>
+        
+        <label for="value8">Value 8:</label>
+        <input type="number" id="value8" step="any" required>
+
+
+	 <div class="button-container">
+            <button type="submit">Submit</button>
+            <button type="button" id="clearButton">Clear</button>
+        </div>
+      
+    </form>
+
+<div id="result"></div>
+
+    <script>
+
+        // Function to clear all input fields and the result div
+        function clearFields() {
+            // Clear all input fields
+            document.getElementById('value1').value = '';
+            document.getElementById('value2').value = '';
+            document.getElementById('value3').value = '';
+            document.getElementById('value4').value = '';
+            document.getElementById('value5').value = '';
+            document.getElementById('value6').value = '';
+            document.getElementById('value7').value = '';
+            document.getElementById('value8').value = '';
+
+            // Clear the result div
+            document.getElementById('result').innerHTML = '';
+        }
+
+        // Clear button event listener
+        document.getElementById('clearButton').addEventListener('click', clearFields);
+
+        // Form submission event listener
+        document.getElementById('valuesForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Get the values from the input fields
+            const values = [
+                parseFloat(document.getElementById('value1').value),
+                parseFloat(document.getElementById('value2').value),
+                parseFloat(document.getElementById('value3').value),
+                parseFloat(document.getElementById('value4').value),
+                parseFloat(document.getElementById('value5').value),
+                parseFloat(document.getElementById('value6').value),
+                parseFloat(document.getElementById('value7').value),
+                parseFloat(document.getElementById('value8').value)
+            ];
+
+            // Send the data to the /send-values endpoint
+            try {
+                const response = await fetch('/send-values', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ values: values })
+                });
+
+                // Get the response data
+                const result = await response.json();
+
+                // Display the result in the result div
+                document.getElementById('result').innerHTML = `
+                    <h3>Response:</h3>
+                    <p><strong>Status:</strong> ${result.Status}</p>
+                    <p><strong>Values:</strong> ${result.Values.join(', ')}</p>
+                    <p><strong>Predicted Output:</strong> <span style="color: blue;">${result["Predicted Output"]}</span></p>
+                    <p><strong>Model:</strong> ${result.Model}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <p style="color:red;">Error: ${error.message}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+
