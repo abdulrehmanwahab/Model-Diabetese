@@ -1,0 +1,23 @@
+runtime: python
+env: flex
+# workers = (2 x number of CPUs) + 1
+entrypoint: gunicorn -w 5 -k uvicorn.workers.UvicornWorker main:app
+
+manual_scaling:
+  instances: 5
+
+resources:
+  cpu: 2
+  memory_gb: 2
+  disk_size_gb: 10
+
+# The python_version specification is not necessary here since the runtime already specifies it
+# runtime_config:
+  operating_system: "ubuntu22"
+
+handlers:
+  - url: /static
+    static_dir: static  # This serves files in the static directory at /static
+
+  - url: /.*
+    script: auto  # This directs all other requests to your FastAPI application
